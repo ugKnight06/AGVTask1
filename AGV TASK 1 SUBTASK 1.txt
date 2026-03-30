@@ -1,0 +1,66 @@
+# AGV TASK 1 SUBTASK 1
+
+### Overview
+
+An honest Documentation of my experience with Task 1 SubTask 1 of AGV SELECTIONS 2026
+
+### OBJECTIVE
+
+- This task is aimed at introducing the concept of Optical Flow using feature detection and feature tracking algorithms such as lucas kanade optical flow and harris , shi tomasi corner detection methods for sparse optical flow.
+
+### INTRODUCTION
+
+Optical Flow is the pattern of apparent motion of objects between two consecutive frames caused by the movement of the object or the camera. The Lucas-Kanade (LK) method is a widely used Sparse Optical Flow algorithm. Unlike dense methods, it tracks specific "features of interest" (like corners) rather than every pixel. The algorithm relies on the Brightness Constancy Assumption, which posits that the intensity of a moving pixel remains constant over a short interval of time.
+
+To implement LK effectively, several preprocessing steps are required:
+Feature Detection: We must first identify "trackable" points, typically using the Shi-Tomasi Corner Detector (cv2.goodFeaturesToTrack).
+Grayscale Conversion: Since the algorithm operates on intensity gradients, input frames must be converted to grayscale.
+Image Pyramids: To handle large displacements (where the local window assumption fails), Gaussian Pyramids are used to perform a coarse-to-fine search across multiple resolutions.
+4. Implementation in Autonomous Systems
+In the context of Autonomous Ground Vehicles (AGV), the Lucas-Kanade method is used for:
+Ego-motion Estimation: Determining the robot's own velocity and direction.
+Obstacle Avoidance: Identifying motion vectors that deviate from the expected flow.
+Focus of Expansion (FOE): Locating the point from which all flow vectors radiate to determine the robot's heading and time-to-contact with obstacles.
+
+### 
+
+### Procedure / Details
+
+The project began with a deep dive into Computer Vision fundamentals. I extensively studied the OpenCV documentation focusing on feature detection techniques such as Harris Corner Detection and the Shi-Tomasi Corner Detector. Understanding how to identify "trackable" pixels (pixels with high eigenvalues in both directions) was the first step toward stable motion estimation.
+To bridge the gap between theory and implementation, I analyzed several technical demonstrations on feature tracking and thoroughly reviewed the SemArFlow paper. This provided a mathematical framework for integrating optical flow with autonomous navigation and understanding how flow vectors relate to a robot's ego-motion.
+
+Here’s a working pipeline of this project 
+
+Subtask 1 only
+Video Input
+↓
+Frame Extraction(cv2.imread no but capture frame then read frame )
+↓
+Convert to Grayscale( use cvtColor)
+↓
+Detect Feature Points(Use Shi Tomasi corner detection)[ Define parameters and other factors then use goodfeaturestotrack() to detect corners and slide window over only these special points)
+↓
+Take Next Frame( use loop )
+↓
+Lucas-Kanade Optical Flow (Implement from scratch )
+↓
+Draw Motion Vectors
+↓
+Update Features
+↓
+Repeat
+
+### Troubleshooting
+
+- **Problem 1: The code wasn’t as robust as it should have been because in the video i operated on the effects of some of my ill-implementation weren’t that visible , but in a real life AGV operation the speed of the frames changing acts as a limitation for the lucas kanade algorithm that acts accurately only for slow pixel movement**
+    - **Fix: I could’ve used an image pyramid where we can use gaussian filters and decomposition to scale down the image so a 10 pixel movement in original image would only cause a 5 pixel movement in new image thereby allowing lucas kanade algorithm to operate on this particular image**
+    - Problem 2 : In real life situations this code would flag a lot of errors due to occlusion of some previously detected corners that might not be found in consecutive frames
+        - Fix: In the actual CalcOpticalFlowPyrLK() function given by OpenCV it returns a status flag for each variable after comparing frames I(t) and I(t+dt) and checking if some corners get missing in the next frame it returns a status flag value of 0 that filters out such corners
+        - 
+    
+
+### References
+
+- Basic OpenCV Documentation
+- Kevin Wood robotics
+- Lecture notes on Geometric Computer Vision by Peter Sturm
