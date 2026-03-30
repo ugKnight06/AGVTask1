@@ -1,5 +1,6 @@
 import numpy as np
 import cv2 as cv 
+from scipy.signal import convolve2d
 
 sobel_x=np.array([[-1,0,1],[-2,0,2],[-1,0,1]])
 sobel_y=np.array([[-1,-2,-1],[0,0,0],[1,2,1]])
