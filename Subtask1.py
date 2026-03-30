@@ -13,8 +13,7 @@ It = frame_gray-old_gray
 
 nextPts = []
 for [x, y] in p0: 
-    ATA = np.array([[np.sum(Ix*Ix), np.sum(Ix*Iy)], 
-                    [np.sum(Ix*Iy), np.sum(Iy*Iy)]])
+    ATA = np.array([[np.sum(Ix@Ix), np.sum(Iy@Iy)],[np.sum(Ix@Iy),np.sum(Iy@Iy)]])
     ATb = np.array([[-np.sum(Ix*It)], 
                     [-np.sum(Iy*It)]])
 
